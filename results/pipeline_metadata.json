@@ -1,0 +1,47 @@
+{
+  "hostname": "cnode01",
+  "python_version": "3.12.11",
+  "package_versions": {
+    "qiskit": "2.6.2",
+    "qiskit-aer": "0.18.2",
+    "qiskit-algorithms": "0.4.0",
+    "qiskit-optimization": "0.7.0",
+    "qiskit-machine-learning": "0.9.1",
+    "scikit-learn": "1.9.1",
+    "pandas": "3.1.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "openpyxl": "3.1.5",
+    "matplotlib": "3.11.2"
+  },
+  "seeds": {
+    "global_seed": 42,
+    "cv_split_seed": 42,
+    "model_seed": 42,
+    "optimizer_seed": 42,
+    "simulator_seed": 42,
+    "transpiler_seed": 42,
+    "monte_carlo_seed": 42
+  },
+  "parameters": {
+    "stage2_exact_k": 6,
+    "stage2_budget_c": 25,
+    "stage2_capacity_h": 22,
+    "stage2_qaoa_shots": 4096,
+    "stage3_min_subscribers": 3,
+    "stage3_shots": 8192,
+    "monte_carlo_shots": 100000
+  },
+  "timings_seconds": {
+    "stage1": 17.231451377272606,
+    "stage2": 82.46206753887236,
+    "stage3": 0.2800011467188597,
+    "total": 103.99999871850014
+  },
+  "figures": {
+    "stage1_cv_comparison": "/lustre1/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/results/figures/stage1_cv_comparison.png",
+    "stage1_calibration_and_top10": "/lustre1/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/results/figures/stage1_calibration_and_top10.png",
+    "stage2_optimization_landscape": "/lustre1/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/results/figures/stage2_optimization_landscape.png",
+    "stage3_circuit_and_outcomes": "/lustre1/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/results/figures/stage3_circuit_and_outcomes.png"
+  }
+}

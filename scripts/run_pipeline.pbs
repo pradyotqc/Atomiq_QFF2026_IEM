@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -N atomiq_pipeline
+#PBS -q debug
+#PBS -l select=1:ncpus=8:mem=24gb
+#PBS -l walltime=00:15:00
+#PBS -j oe
+#PBS -o "/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/pbs_logs/run_pipeline.pbs.out"
+
+set -euo pipefail
+REPO_DIR="/home/pradyot/Hackathon /Atomiq_QFF2026_IEM"
+mkdir -p "${REPO_DIR}/pbs_logs"
+exec > "${REPO_DIR}/pbs_logs/run_pipeline.log" 2>&1
+cd "${REPO_DIR}"
+
+export OMP_NUM_THREADS=8
+export OPENBLAS_NUM_THREADS=8
+export MKL_NUM_THREADS=8
+export MPLBACKEND=Agg
+export PYTHONUNBUFFERED=1
+
+source "${REPO_DIR}/.venv/bin/activate"
+
+echo "=== Host: $(hostname) | CPUs: $(nproc) | Start: $(date) ==="
+python -u run_pipeline.py
+echo "=== Running Verification Tests ==="
+python -u -m unittest discover -s tests -v
+echo "=== Executing End-to-End Notebook ==="
+jupyter nbconvert --to notebook --execute --inplace "${REPO_DIR}/notebooks/end_to_end_pipeline.ipynb"
+echo "=== Building Beamer Presentation PDF ==="
+if command -v pdflatex >/dev/null 2>&1; then
+  cd "${REPO_DIR}/presentation"
+  pdflatex -interaction=nonstopmode -halt-on-error slides.tex
+  pdflatex -interaction=nonstopmode -halt-on-error slides.tex
+  cd "${REPO_DIR}"
+else
+  echo "pdflatex not installed on compute host $(hostname); compile presentation/slides.tex on login/local host."
+fi
+echo "=== Finished: $(date) ==="
+

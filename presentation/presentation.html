@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hybrid Quantum-Classical Term Deposit Campaign Pipeline — Pradyot P. Sahoo</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --surface: #111827;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --quantum: #60a5fa;
+      --emerald: #34d399;
+      --violet: #a78bfa;
+      --amber: #fbbf24;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .deck {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 32px;
+      background:
+        radial-gradient(circle at 86% 14%, rgba(37, 99, 235, 0.16), transparent 42%),
+        radial-gradient(circle at 12% 86%, rgba(16, 185, 129, 0.12), transparent 40%),
+        var(--bg);
+    }
+    .slide {
+      display: none;
+      position: relative;
+      width: 100%;
+      max-width: 1280px;
+      height: 100%;
+      max-height: 780px;
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.98) 0%, rgba(15, 23, 42, 0.99) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 16px;
+      padding: 28px 36px;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      overflow-y: auto;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: fadeSlide 0.2s ease-out;
+    }
+    .slide::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      border-radius: 16px 16px 0 0;
+      background: linear-gradient(90deg, #2563eb 0%, #06b6d4 50%, #10b981 100%);
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .slide.active { display: flex; }
+    .slide-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+    }
+    .tag {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 4px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    h1 { font-size: 25px; line-height: 1.25; color: #f8fafc; }
+    h2 { font-size: 16.5px; color: var(--accent); margin-bottom: 8px; }
+    p, li { font-size: 14.5px; line-height: 1.5; color: #cbd5e1; }
+    ul { padding-left: 18px; display: flex; flex-direction: column; gap: 7px; }
+    strong { color: #f8fafc; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12.5px;
+      background: #0f172a;
+      color: #7dd3fc;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    .author-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 15px;
+      margin-bottom: 14px;
+      background: rgba(16, 185, 129, 0.10);
+      border: 1px solid rgba(52, 211, 153, 0.45);
+      border-radius: 10px;
+      font-size: 14px;
+      color: #f8fafc;
+    }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 10px 0; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 10px 0; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .kpi { font-size: 26px; font-weight: 800; color: var(--emerald); margin: 4px 0; }
+    .kpi.blue { color: var(--quantum); }
+    .kpi.amber { color: var(--amber); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+    th, td { padding: 7px 9px; border-bottom: 1px solid var(--border); text-align: left; }
+    th { color: var(--accent); font-weight: 600; background: rgba(15, 23, 42, 0.65); }
+    tr.highlight { background: rgba(52, 211, 153, 0.12); }
+    .img-wrap {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .img-wrap img { max-width: 100%; max-height: 360px; object-fit: contain; }
+    .img-wrap.hero img { max-height: 495px; }
+    .progress-track { width: 100%; height: 3px; background: #1e293b; }
+    .progress-fill {
+      height: 100%;
+      width: 7.14%;
+      background: linear-gradient(90deg, #2563eb, #06b6d4, #10b981);
+      transition: width 0.2s ease;
+    }
+    .controls {
+      height: 50px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn-group { display: flex; gap: 10px; align-items: center; }
+    button {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 15px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { border-color: var(--accent); color: var(--accent); }
+    .slide-meta { font-size: 13px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <!-- Slide 1 -->
+    <section class="slide active">
+      <div>
+        <div class="slide-header">
+          <h1>Hybrid Quantum-Classical Term Deposit Campaign Pipeline</h1>
+          <span class="tag">Slide 1 / 14 · Executive Overview</span>
+        </div>
+        <div class="author-badge">
+          <strong>Pradyot P. Sahoo</strong>
+          <span style="color: var(--muted);">|</span>
+          <span style="color: #cbd5e1;">Atomiq QFF 2026 IEM · Qiskit 2.6.2 · Qiskit Aer 0.18.2 · Seed = 42</span>
+        </div>
+        <p style="font-size:15.5px; margin-bottom:14px;">
+          Connected three-stage workflow built on <code>bank_campaign_participant_release.xlsx</code>
+          (<code>300</code> train / <code>100</code> test without <code>duration</code>) selecting <strong>K = 6</strong>
+          customers under contact budget <strong>C = 25</strong> and advisor capacity <strong>H = 22</strong>.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h2>Stage 1 · Predict</h2>
+            <div class="kpi blue">0.0993 Brier</div>
+            <p>Zero-centered 6q <code>Quantum_Kernel_LogReg</code> achieves lowest Brier score &amp; lowest competitive calibration error (<code>ECE = 0.0043</code>, <code>PR-AUC = 0.2406</code>) with zero test leakage.</p>
+          </div>
+          <div class="card">
+            <h2>Stage 2 · Select</h2>
+            <div class="kpi">+24.40% Uplift</div>
+            <p>20q <code>QUBO_CVaR_QAOA</code> matches exact classical optimum <strong>23.1835</strong> (<code>gap = 0.0000</code>), vs. <code>18.6361</code> for rank top-6, using <code>13/25</code> budget and <code>16/22</code> capacity.</p>
+          </div>
+          <div class="card">
+            <h2>Stage 3 · Simulate</h2>
+            <div class="kpi amber">P(S &ge; 3) = 0.282049</div>
+            <p>6-qubit <code>Ry(&theta;j)</code> circuit matches exact Poisson-Binomial to <code>1e-16</code>; tensor readout mitigation reduces noisy error by <strong>95.9%</strong> (<code>+0.00445</code> &rarr; <strong>+0.00018</strong>).</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <strong>Final Recommended Cohort (<code>1110001110</code>):</strong>
+        <code>C0081</code> (#1), <code>C0031</code> (#2), <code>C0079</code> (#3), <code>C0327</code> (#7), <code>C0349</code> (#8), <code>C0206</code> (#9) &middot;
+        Expected Subscribers: <strong>1.8970</strong> &middot; Expected Net Value: <strong>23.1835</strong>
+      </div>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Challenge Aims &amp; Connected Quantum vs. Classical Architecture</h1>
+          <span class="tag">Slide 2 / 14 · System Design</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>Classical Contribution</th>
+              <th>Quantum / Hybrid Contribution</th>
+              <th>Verified Handoff Artifact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Stage 1: Predict</strong></td>
+              <td>5-fold Stratified CV (<code>300</code> train), OHE, <code>SelectKBest(k=6)</code>, scaling, L2 LogReg (top PR/ROC-AUC) &amp; baselines</td>
+              <td>6q zero-centered <code>Z+ZZ</code> Pauli feature map, exact kernel (selected for calibration) &amp; <code>Aer</code> noise simulation audit</td>
+              <td><code>stage1_results.csv</code> (100 calibrated probabilities, Top-10 flag)</td>
+            </tr>
+            <tr>
+              <td><strong>Stage 2: Select</strong></td>
+              <td>Exact <code>C(10,6)=210</code> search, exact <code>2^20</code> Ising ground check (<code>match=True</code>), COBYLA (<code>alpha=0.15</code>)</td>
+              <td>20q QUBO <code>CVaR-QAOA</code> &amp; <code>SamplingVQE</code>; slack-free 10q Dicke <code>|D_10^6&gt;</code> Brickwork XY-QAOA &amp; 10q <code>HW-VQE</code></td>
+              <td><code>stage2_results.csv</code> (verbatim S1 probs, 6 selected IDs, <code>gap=0.0</code>)</td>
+            </tr>
+            <tr>
+              <td><strong>Stage 3: Simulate</strong></td>
+              <td>Exact Poisson-Binomial DP, 100k &amp; 8,192 MC checks, per-qubit 2&times;2 confusion calibration</td>
+              <td>6q <code>Ry(2 arcsin sqrt(p_j))</code> circuit across Ideal SV, 8,192 shots, Noisy Aer &amp; readout mitigation</td>
+              <td><code>stage3_results.csv</code> (mapping, counts, PMF, full error audit)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <strong>Pipeline Traceability Guarantee:</strong> Stage 1 test probabilities propagate verbatim into Stages 2 and 3 (verified within <code>1e-12</code> tolerance by automated unit tests).
+      </div>
+    </section>
+
+    <!-- Slide 3 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 1 Methodology: Anti-Leakage Firewall &amp; Feature Engineering</h1>
+          <span class="tag">Slide 3 / 14 · Stage 1 Pipeline</span>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h2>Zero-Leakage Discipline (<code>CV_SPLIT_SEED = 42</code>)</h2>
+            <ul>
+              <li><strong>Training Imbalance:</strong> <code>Stage1_Train</code> has <code>300</code> labeled rows (<code>35 yes / 265 no</code> = <code>11.67%</code> base positive rate).</li>
+              <li><strong>Post-Call Purge:</strong> <code>duration</code> is strictly dropped across both train and test datasets before any engineering.</li>
+              <li><strong>Single Blind Pass:</strong> <code>Stage1_Test</code> (<code>100</code> rows) is never consulted for imputation, feature selection, scaling, or calibration; scored once with ascending <code>customer_id</code> tie-breaks.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h2>Fold-Isolated Transformation Stages</h2>
+            <ul>
+              <li><strong>Domain Features:</strong> Engineered contact intensity, previous-campaign outcome ratios, macroeconomic interactions, and balance brackets.</li>
+              <li><strong>Strict Per-Fold Fit:</strong> <code>SimpleImputer</code>, <code>OneHotEncoder</code>, <code>StandardScaler</code>, <code>SelectKBest(f_classif, k=6)</code>, and RKHS eigenbasis projection fit <em>inside each training fold only</em>.</li>
+              <li><strong>Platt Calibration:</strong> Inner 5-fold sigmoid scaling aligns predicted probabilities before Stages 2 &amp; 3 use them in revenue expectations.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <strong>Why Calibration Matters Downstream:</strong> Stage 2 computes <code>p_i * deposit_i - cost_i</code>, and Stage 3 multiplies six customer probabilities. Overconfident rankings distort budget allocation even if ROC-AUC appears unchanged.
+      </div>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 1 Quantum Core: Solving Kernel Concentration</h1>
+          <span class="tag">Slide 4 / 14 · Quantum Kernel</span>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h2>Diagnosis: Default <code>zz_feature_map</code> Collapse</h2>
+            <ul>
+              <li>Qiskit's default <code>zz_feature_map</code> encodes offsets as <code>2(&pi; - x_i)(&pi; - x_j)</code>.</li>
+              <li>Across 6 standardized banking covariates, statevectors spread near-orthogonally — collapsing off-diagonal kernel entries toward 0 and degrading 5-fold CV to near random (<code>PR-AUC = 0.1391</code>, <code>ROC-AUC = 0.5145</code>).</li>
+            </ul>
+          </div>
+          <div class="card" style="border-color: rgba(52, 211, 153, 0.5);">
+            <h2 style="color: var(--emerald);">Zero-Centered Pauli Kernel + Spectral Whitening</h2>
+            <ul>
+              <li>Mapping bounded <code>b * tanh(z/2)</code> into zero-centered <code>pauli_feature_map(6, reps=1, paulis=['Z','ZZ'])</code> keeps phases proportional to <code>x_i</code> and <code>x_i x_j</code>, eliminating <code>2&pi;&sup2;</code> scrambling around origin.</li>
+              <li>Fold-isolated spectral whitening <code>F = K V &Lambda;^(-1/2)</code> + L2 LogReg lifts performance to <strong><code>PR-AUC = 0.2406</code></strong>, <strong><code>Brier = 0.0993</code></strong>, and <strong><code>ECE = 0.0043</code></strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <strong>Aer Kernel Simulation &amp; Noise Audit (<code>ComputeUncompute</code>, 12-Customer Subsample, 2,048 Shots):</strong> Finite-shot Aer matches statevector at <strong>MAE = 0.0052</strong>; synthetic 0.1% 1Q / 1.0% 2Q depolarizing + readout noise raises unmitigated MAE to <strong>0.1574</strong> (simulator check, not physical QPU).
+      </div>
+    </section>
+
+    <!-- Slide 5: Full-Size Clear Benchmark Figure -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 1 Visual Benchmark: Classical vs. Quantum CV Comparison</h1>
+          <span class="tag">Slide 5 / 14 · Stage 1 Chart</span>
+        </div>
+        <div class="img-wrap hero">
+          <img src="../results/figures/stage1_cv_comparison.png" alt="Stage 1 5-Fold CV Comparison" />
+        </div>
+      </div>
+      <div class="card">
+        <strong>Classical vs. Quantum Summary:</strong> <code>Classical_LogReg</code> leads ranking overall (<strong><code>PR-AUC 0.2453</code></strong>, <strong><code>ROC-AUC 0.6527</code></strong>); <code>Classical_RBF_SVC</code> &amp; <code>Quantum_Kernel_SVC</code> tie on <code>Precision@10 = 0.600</code>. <strong><code>Quantum_Kernel_LogReg</code> (Green)</strong> is selected as Primary for <strong>probability calibration</strong> (lowest <code>Brier 0.0993</code>, <code>ECE 0.0043</code>), not ranking superiority.
+      </div>
+    </section>
+
+    <!-- Slide 6 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 1 Zoomed Calibration, Top-10 Ranking &amp; Full Metrics Table</h1>
+          <span class="tag">Slide 6 / 14 · Validation Table</span>
+        </div>
+        <div class="img-wrap" style="margin-bottom: 10px;">
+          <img src="../results/figures/stage1_calibration_and_top10.png" style="max-height: 255px;" alt="Stage 1 Calibration and Top 10" />
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th><th>ROC-AUC (OOF &plusmn; std)</th><th>PR-AUC (OOF &plusmn; std)</th><th>Prec@10</th><th>Rec@10</th><th>Brier Score</th><th>Log Loss</th><th>ECE (5-bin)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>Classical_LogReg</code></td><td><strong>0.6527</strong> (&plusmn;0.126)</td><td><strong>0.2453</strong> (&plusmn;0.058)</td><td>0.500</td><td>0.1429</td><td>0.1002</td><td>0.3584</td><td>0.0309</td></tr>
+            <tr><td><code>Classical_RF</code></td><td>0.6332 (&plusmn;0.067)</td><td>0.2325 (&plusmn;0.084)</td><td>0.300</td><td>0.0857</td><td>0.1010</td><td>0.3500</td><td>0.0151</td></tr>
+            <tr><td><code>Classical_RBF_SVC</code></td><td>0.6083 (&plusmn;0.060)</td><td>0.2195 (&plusmn;0.117)</td><td><strong>0.600</strong></td><td><strong>0.1714</strong></td><td>0.0996</td><td><strong>0.3472</strong></td><td>0.0162</td></tr>
+            <tr class="highlight"><td><strong><code>Quantum_Kernel_LogReg</code> (Primary)</strong></td><td><strong>0.6075</strong> (&plusmn;0.111)</td><td><strong>0.2406</strong> (&plusmn;0.101)</td><td>0.400</td><td>0.1143</td><td><strong>0.0993</strong></td><td>0.3484</td><td><strong>0.0043</strong></td></tr>
+            <tr><td><code>Quantum_Kernel_SVC</code></td><td>0.5577 (&plusmn;0.123)</td><td>0.2250 (&plusmn;0.112)</td><td><strong>0.600</strong></td><td><strong>0.1714</strong></td><td>0.1002</td><td>0.3497</td><td>0.0089</td></tr>
+            <tr><td><code>Hybrid_VQC</code></td><td>0.5214 (&plusmn;0.159)</td><td>0.1687 (&plusmn;0.134)</td><td>0.300</td><td>0.0857</td><td>0.1030</td><td>0.3600</td><td><strong>0.0017</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Slide 7 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 2 Formulation: 20q QUBO Ising &amp; 10q Slack-Free XY-QAOA</h1>
+          <span class="tag">Slide 7 / 14 · Stage 2 Math</span>
+        </div>
+        <div class="card" style="margin-bottom: 12px;">
+          <strong>Constrained Objective:</strong> Maximize <code>&Sigma; (p_i d_i - c_i) x_i</code> over Top-10 subject to <code>&Sigma; x_i = 6</code>, budget <code>&Sigma; c_i x_i &le; 25</code>, capacity <code>&Sigma; w_i x_i &le; 22</code>.
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h2>Path A: 20q QUBO + Exact 2<sup>20</sup> Ising Verification</h2>
+            <ul>
+              <li><code>QuadraticProgramToQubo(penalty=36.0)</code> maps 10 decisions + 10 integer slack qubits into <strong>185 Pauli terms</strong> (<code>ising_offset = 4484.7345</code>); $\lambda = 36.0 > \sum |v_i|$ ensures constraint violations cost more than any objective gain.</li>
+              <li>Exhaustive 2<sup>20</sup> scan confirms exact Ising ground state matches classical optimum (<code>-23.183526225086</code> vs <code>-23.183526225087</code>, <code>match=True</code>).</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h2>Path B: 10q Dicke |D<sub>10</sub><sup>6</sup>&gt; XY-QAOA &amp; Aer HW-VQE</h2>
+            <ul>
+              <li>Brickwork <code>RXX(&beta;)RYY(&beta;)</code> mixer (<code>p=2</code>) initialized in symmetric Dicke state <code>|D_10^6&gt;</code> commutes with $\sum Z_i$, preserving <code>K=6</code> at <strong>100.00% feasible mass</strong> with zero slack qubits.</li>
+              <li><code>10q HW-VQE</code> ansatz (<code>RealAmplitudes r=1</code>, CVaR <code>&alpha;=0.15</code>) concentrates <strong>16.42%</strong> (SV) / <strong>16.80%</strong> (4k shots) / <strong>15.42%</strong> (mitigated Aer noise) onto <code>1110001110</code>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 2 Solver Comparison &amp; Aer Mitigation</h1>
+          <span class="tag">Slide 8 / 14 · Stage 2 Results</span>
+        </div>
+        <div class="img-wrap" style="margin-bottom: 10px;">
+          <img src="../results/figures/stage2_optimization_landscape.png" style="max-height: 265px;" alt="Stage 2 Optimization Landscape" />
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Solver / Simulation Regime</th><th>Qubits</th><th>Best Bitstring</th><th>Objective</th><th>Gap</th><th>Feasible Mass / Peak Opt</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Classical Brute Force (210 subsets)</td><td>--</td><td><code>1110001110</code></td><td><strong>23.183526</strong></td><td>0.0000</td><td>Exact reference</td><td>Verified unique global optimum</td></tr>
+            <tr><td>Exact 2<sup>20</sup> Ising Eigenvalue Scan</td><td>20</td><td><code>1110001110</code></td><td><strong>23.183526</strong></td><td><strong>0.0000</strong></td><td><code>matches_exact=True</code></td><td>Penalty = 36.0 ground state verified</td></tr>
+            <tr class="highlight"><td><strong>20q <code>QUBO_CVaR_QAOA</code> (p=1, 4096 Aer shots)</strong></td><td>20</td><td><code>1110001110</code></td><td><strong>23.183526</strong></td><td><strong>0.0000</strong></td><td>peak 0.1953% (8/4096, 28 evals)</td><td>Matches global optimum with zero gap</td></tr>
+            <tr><td>20q <code>QUBO_CVaR_SamplingVQE</code> (Aer)</td><td>20</td><td><code>1110001011</code></td><td>22.912935</td><td>0.2706</td><td>peak 0.1221% (5/4096, 200 evals)</td><td>Finds #2 global feasible selection</td></tr>
+            <tr><td>10q Dicke XY-QAOA (p=2, SV / 4096 shots)</td><td>10</td><td>feasible K=6</td><td>CVaR -22.37</td><td>--</td><td><strong>100.00%</strong> / 1.68% (1.64%)</td><td>Zero slack qubits; 8.62x peak lift</td></tr>
+            <tr><td>10q <code>HW-VQE</code> (SV / 4k Shots / Noisy / Mit.)</td><td>10</td><td><code>1110001110</code></td><td><strong>23.183526</strong></td><td><strong>0.0000</strong></td><td><strong>42.28% (42.07%) &rarr; 37.06%/40.89%</strong> | Peak <strong>16.42% / 16.80% / 12.99% / 15.42%</strong></td><td>#1 mode across ideal &amp; mitigated Aer noise</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Slide 9 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 2 Top-10 Portfolio Breakdown (+24.40% Uplift vs. Rank)</h1>
+          <span class="tag">Slide 9 / 14 · Portfolio Table</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Rank / Qubit</th><th>Customer ID</th><th>Seg</th><th>S1 Prob p_i</th><th>Cost c_i</th><th>Deposit d_i</th><th>Cap w_i</th><th>Exp Net (p_i d_i - c_i)</th><th>Decision</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight"><td>#1 (x0)</td><td><strong>C0081</strong></td><td>C</td><td>0.4331</td><td>4</td><td>17</td><td>1</td><td><strong>3.3630</strong></td><td><strong>Select (1)</strong></td></tr>
+            <tr class="highlight"><td>#2 (x1)</td><td><strong>C0031</strong></td><td>D</td><td>0.4233</td><td>2</td><td>13</td><td>1</td><td><strong>3.5023</strong></td><td><strong>Select (1)</strong></td></tr>
+            <tr class="highlight"><td>#3 (x2)</td><td><strong>C0079</strong></td><td>A</td><td>0.4043</td><td>3</td><td>24</td><td>3</td><td><strong>6.7034</strong></td><td><strong>Select (1)</strong></td></tr>
+            <tr><td>#4 (x3)</td><td>C0265</td><td>D</td><td>0.2435</td><td>4</td><td>23</td><td>4</td><td>1.5994</td><td>Skip (0)</td></tr>
+            <tr><td>#5 (x4)</td><td>C0183</td><td>B</td><td>0.2335</td><td>2</td><td>14</td><td>3</td><td>1.2687</td><td>Skip (0)</td></tr>
+            <tr><td>#6 (x5)</td><td>C0359</td><td>D</td><td>0.2285</td><td>1</td><td>14</td><td>2</td><td>2.1992</td><td>Skip (0)</td></tr>
+            <tr class="highlight"><td>#7 (x6)</td><td><strong>C0327</strong></td><td>B</td><td>0.2200</td><td>1</td><td>25</td><td>4</td><td><strong>4.5001</strong></td><td><strong>Select (1)</strong></td></tr>
+            <tr class="highlight"><td>#8 (x7)</td><td><strong>C0349</strong></td><td>B</td><td>0.2089</td><td>1</td><td>17</td><td>3</td><td><strong>2.5507</strong></td><td><strong>Select (1)</strong></td></tr>
+            <tr class="highlight"><td>#9 (x8)</td><td><strong>C0206</strong></td><td>A</td><td>0.2075</td><td>2</td><td>22</td><td>4</td><td><strong>2.5639</strong></td><td><strong>Select (1)</strong></td></tr>
+            <tr><td>#10 (x9)</td><td>C0222</td><td>D</td><td>0.2038</td><td>2</td><td>21</td><td>1</td><td>2.2801</td><td>Skip (0) &middot; Wave-2 #1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <strong>Why Value-Aware Selection Beats Rank Order:</strong> Swapping costly/low-deposit ranks #4–#6 (<code>5.0673</code>) for high-deposit/low-cost ranks #7–#9 (<code>9.6148</code>) yields <strong>23.1835</strong> vs. <code>18.6361</code> (<strong>+24.40%</strong> uplift) using only <code>13/25</code> budget and <code>16/22</code> capacity.
+      </div>
+    </section>
+
+    <!-- Slide 10 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 3 Design: 6-Qubit Circuit Mapping &amp; Bit-Ordering Proof</h1>
+          <span class="tag">Slide 10 / 14 · Stage 3 Circuit</span>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h2>Customer-to-Qubit Map (<code>|q5 q4 q3 q2 q1 q0&gt;</code>)</h2>
+            <table>
+              <thead><tr><th>Qubit</th><th>MSB0 Pos</th><th>Customer</th><th>Rank</th><th>S1 p_j</th><th>Ry(&theta;_j) rad</th></tr></thead>
+              <tbody>
+                <tr><td><code>q0</code></td><td>5</td><td><strong>C0081</strong></td><td>#1</td><td>0.433119</td><td>1.436632</td></tr>
+                <tr><td><code>q1</code></td><td>4</td><td><strong>C0031</strong></td><td>#2</td><td>0.423253</td><td>1.416693</td></tr>
+                <tr><td><code>q2</code></td><td>3</td><td><strong>C0079</strong></td><td>#3</td><td>0.404309</td><td>1.378227</td></tr>
+                <tr><td><code>q3</code></td><td>2</td><td><strong>C0327</strong></td><td>#7</td><td>0.220005</td><td>0.976421</td></tr>
+                <tr><td><code>q4</code></td><td>1</td><td><strong>C0349</strong></td><td>#8</td><td>0.208867</td><td>0.949282</td></tr>
+                <tr><td><code>q5</code></td><td>0</td><td><strong>C0206</strong></td><td>#9</td><td>0.207452</td><td>0.945799</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h2>Circuit Realization, Equivalence &amp; Confusion Mitigation</h2>
+            <ul>
+              <li><code>|q5 q4 q3 q2 q1 q0&gt; = |C0206 C0349 C0327 C0079 C0031 C0081&gt;</code>; each qubit uses <code>Ry(2 arcsin sqrt(p_j))</code> (depth <code>2</code>, <code>0</code> CNOTs, <code>8,192</code> Aer shots).</li>
+              <li><strong>Bit Ordering:</strong> Bitstring <code>b = b5 b4 b3 b2 b1 b0</code> reads qubit <code>j</code> at MSB0 index <code>5 - j</code>.</li>
+              <li><strong>Exact DP Check (No Speedup Claim):</strong> Mathematically equivalent to Poisson-Binomial DP (<strong>0.28204944</strong>, exact within <code>1e-16</code>); built for circuit realization &amp; noise mitigation benchmarking (expected subscribers = <strong>1.8970</strong>).</li>
+              <li><strong>Why Readout Inversion Works:</strong> 1.5% 0&rarr;1 asymmetric flips push dense <code>K=2</code> (33.8%) over <code>K&ge;3</code>; Kronecker inverse $\bigotimes M_j^{-1}$ removes 95.9% of that bias.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 11 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Stage 3 Outcomes: Subscription PMF, Counts &amp; 95.9% Noise Cut</h1>
+          <span class="tag">Slide 11 / 14 · Stage 3 Outcomes</span>
+        </div>
+        <div class="img-wrap" style="margin-bottom: 10px;">
+          <img src="../results/figures/stage3_circuit_and_outcomes.png" style="max-height: 270px;" alt="Stage 3 Circuit and Outcomes" />
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h2>Aer 8,192-Shot Hamming Counts (<code>K = 0..6</code>)</h2>
+            <table>
+              <thead><tr><th>K</th><th>0</th><th>1</th><th>2</th><th>3*</th><th>4*</th><th>5*</th><th>6*</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Counts</strong></td><td>764</td><td>2,365</td><td>2,774</td><td><strong>1,664</strong></td><td><strong>528</strong></td><td><strong>92</strong></td><td><strong>5</strong></td></tr>
+                <tr><td><strong>Exact DP</strong></td><td>0.0953</td><td>0.2843</td><td>0.3384</td><td>0.2045</td><td>0.0660</td><td>0.0108</td><td>0.0007</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <h2>Estimator Error vs. Exact (<code>0.282049</code>)</h2>
+            <table>
+              <thead><tr><th>Regime</th><th>P(S &ge; 3)</th><th>Error vs Exact</th></tr></thead>
+              <tbody>
+                <tr><td>Ideal SV / MC 100k / MC 8,192</td><td>0.282049 / 0.281620 / 0.277466</td><td>0.000000 / -0.000429 / -0.004584</td></tr>
+                <tr><td>Aer Shots (8,192) / Noisy Unmitigated</td><td>0.279419 / 0.286499</td><td>-0.002630 / +0.004450</td></tr>
+                <tr class="highlight"><td><strong>Noisy + Readout Mitigated</strong></td><td><strong>0.282232</strong></td><td><strong>+0.000182 (-95.9%)</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 12 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Quantum Telemetry, Determinism &amp; Runtime Verification</h1>
+          <span class="tag">Slide 12 / 14 · Reproducibility</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Circuit / Backend</th><th>Qubits</th><th>Orig Depth</th><th>Transp Depth</th><th>1Q (Orig &rarr; Tr.)</th><th>2Q Gates</th><th>SWAPs</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Stage 1: Zero-Centered Pauli FM (Aer)</td><td>6 / 6</td><td>17</td><td>16</td><td>17 &rarr; 11</td><td>10 (<code>cx</code>)</td><td>0</td></tr>
+            <tr><td>Stage 1: Hybrid VQC (Aer)</td><td>6 / 6</td><td>24</td><td>23</td><td>35 &rarr; 29</td><td>20 (<code>cx</code>)</td><td>0</td></tr>
+            <tr><td>Stage 2: 20q QUBO <code>CVaR-QAOA (p=1)</code></td><td>20 / 20</td><td>36</td><td>35</td><td>60 &rarr; 40</td><td>165 (<code>rzz</code>)</td><td>0</td></tr>
+            <tr><td>Stage 2: 20q QUBO <code>SamplingVQE (r=1)</code></td><td>20 / 20</td><td>21</td><td>22</td><td>40 &rarr; 40</td><td>19 (<code>cx</code>)</td><td>0</td></tr>
+            <tr><td>Stage 2: 10q <code>HW-VQE</code> (Linear Backend)</td><td>10 / 10</td><td>12</td><td>18</td><td>20 &rarr; 80</td><td>9 (<code>cx</code>)</td><td>0</td></tr>
+            <tr><td>Stage 3: 6q <code>Ry</code> Circuit (Aer / Linear)</td><td>6 / 6</td><td>2</td><td>2 / 5</td><td>6 &rarr; 6 / 24</td><td>0</td><td>0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <strong>Deterministic Runtime Verification:</strong> All 7 seeds fixed to <code>42</code>; verified end-to-end execution in <strong>104.00s</strong> (Stage 1 <code>17.23s</code>, Stage 2 <code>82.46s</code>, Stage 3 <code>0.28s</code>). All <code>3/3</code> unit tests &amp; full notebook passed cleanly.
+      </div>
+    </section>
+
+    <!-- Slide 13 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Challenge Specification Compliance: Did Results Meet Every Aim?</h1>
+          <span class="tag">Slide 13 / 14 · Requirements Audit</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Deliverable / Scope</th><th>Required Check</th><th>Verified?</th><th>Concrete Repository Evidence</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight"><td><code>stage1_results.csv</code> &amp; CV</td><td>100 IDs, no <code>duration</code>, Classical &amp; Quantum CV</td><td><strong>Verified</strong></td><td><code>101</code> lines (<code>duration</code> absent); <code>Classical_LogReg</code> leads PR-AUC; <code>Quantum_Kernel_LogReg</code> leads Brier (<code>0.0993</code>) &amp; ECE (<code>0.0043</code>)</td></tr>
+            <tr class="highlight"><td>Zero-Leakage Coupling</td><td>Fold-only preprocessing, verbatim <code>p_i</code> handoff</td><td><strong>Verified</strong></td><td><code>tests/test_pipeline.py</code> asserts <code>|&Delta;p_i| &lt; 1e-12</code> across all 3 CSV deliverables</td></tr>
+            <tr class="highlight"><td><code>stage2_results.csv</code> &amp; Opt</td><td><code>K=6</code>, <code>C&le;25</code>, <code>H&le;22</code>, QUBO/XY-QAOA vs exact</td><td><strong>Verified</strong></td><td><code>11</code> lines; <code>1110001110</code>: cost <code>13/25</code>, cap <code>16/22</code>, net <code>23.183526</code> (<code>gap=0.0</code>); QAOA <code>8/4096</code></td></tr>
+            <tr class="highlight"><td><code>stage3_results.csv</code> &amp; Sim</td><td>6q <code>Ry</code>, MSB0, Ideal/Shots/Noisy/Mitigated vs DP/MC</td><td><strong>Verified</strong></td><td><code>7</code> lines; <code>8,192</code> shots; Ideal SV <code>0.282049</code> = DP; Mitigated <code>0.282232</code> (-95.9% Aer noise err)</td></tr>
+            <tr class="highlight"><td>Code, Notebook &amp; Docs</td><td>CSVs, README, runnable notebook, tests, PDFs</td><td><strong>Verified</strong></td><td><code>run_pipeline.py</code>, <code>3/3</code> tests, executed <code>.ipynb</code>, <code>README.md</code>, <code>report.pdf</code>, <code>slides.pdf</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <strong>Audit Scope Note:</strong> Every CSV schema, numerical metric, and circuit telemetry check is verified directly from repository deliverables (quantum results simulated in <code>AerSimulator</code> with linear <code>GenericBackendV2</code> transpilation, not physical QPUs).
+      </div>
+    </section>
+
+    <!-- Slide 14 -->
+    <section class="slide">
+      <div>
+        <div class="slide-header">
+          <h1>Error Analysis, Limitations &amp; Actionable Recommendation</h1>
+          <span class="tag">Slide 14 / 14 · Decision &amp; Outlook</span>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h2>Technical Limitations &amp; Scope Boundaries</h2>
+            <ul>
+              <li><strong>Simulation-Only Execution:</strong> All quantum stages run in <code>AerSimulator</code> (statevector, shots, synthetic noise) + <code>GenericBackendV2</code> transpilation; physical QPU runs remain external.</li>
+              <li><strong>No Ranking or Stage 3 Speedup Claimed:</strong> Classical LogReg holds top ranking (<code>PR-AUC 0.2453</code>, <code>ROC-AUC 0.6527</code>); quantum kernel leads calibration (<code>ECE 0.0043</code>). Stage 3 equals Poisson-Binomial DP (extendable via <code>CRy</code> correlation).</li>
+              <li><strong>Slack Dilution vs. XY Mixers:</strong> 20q QUBO slacks dilute bitstring peak mass (<code>0.195%</code>); 10q Dicke XY-QAOA enforces <code>100%</code> feasibility and 10q HW-VQE concentrates <code>15.42%</code> mitigated mass on optimum.</li>
+            </ul>
+          </div>
+          <div class="card" style="border-color: rgba(52, 211, 153, 0.5);">
+            <h2 style="color: var(--emerald);">Executive Business Recommendation</h2>
+            <ul>
+              <li><strong>Deploy Cohort <code>1110001110</code>:</strong> Contact <strong>[C0081, C0031, C0079, C0327, C0349, C0206]</strong> for <strong>23.1835 expected net value</strong> (<strong>+24.40%</strong> uplift vs. propensity top-6).</li>
+              <li><strong>Realistic Campaign Target:</strong> Expect <strong>1.90 conversions</strong>; <code>1–2</code> conversions at <strong>62.3%</strong> and <code>&ge; 3</code> target at <strong>28.2%</strong> probability.</li>
+              <li><strong>Wave-2 Headroom:</strong> Uses <strong>52%</strong> budget (<code>13/25</code>; <strong>12 left</strong>) &amp; <strong>72.7%</strong> capacity (<code>16/22</code>; <strong>6 left</strong>), reserving <code>48%</code> budget / <code>27.3%</code> capacity for Wave-2 (<code>C0222</code>).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <strong>Prepared by Pradyot P. Sahoo:</strong> <code>stage1_results.csv</code> &middot; <code>stage2_results.csv</code> &middot; <code>stage3_results.csv</code> &middot; <code>README.md</code> &middot; <code>notebooks/end_to_end_pipeline.ipynb</code> &middot; <code>tests/test_pipeline.py</code>
+      </div>
+    </section>
+  </div>
+
+  <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+  <div class="controls">
+    <div class="slide-meta"><strong>Pradyot P. Sahoo</strong> &middot; Atomiq QFF 2026 IEM &middot; Hybrid Quantum-Classical Term Deposit Pipeline</div>
+    <div class="btn-group">
+      <button id="prevBtn" type="button">&larr; Prev</button>
+      <span id="counter" class="slide-meta">1 / 14</span>
+      <button id="nextBtn" type="button">Next &rarr;</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const counter = document.getElementById('counter');
+      const progressFill = document.getElementById('progressFill');
+      let idx = 0;
+      function show(i) {
+        idx = (i + slides.length) % slides.length;
+        slides.forEach((s, k) => s.classList.toggle('active', k === idx));
+        counter.textContent = (idx + 1) + ' / ' + slides.length;
+        progressFill.style.width = (((idx + 1) / slides.length) * 100) + '%';
+      }
+      document.getElementById('prevBtn').addEventListener('click', () => show(idx - 1));
+      document.getElementById('nextBtn').addEventListener('click', () => show(idx + 1));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') show(idx + 1);
+        if (e.key === 'ArrowLeft') show(idx - 1);
+      });
+    })();
+  </script>
+</body>
+</html>

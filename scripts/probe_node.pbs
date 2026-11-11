@@ -1,0 +1,26 @@
+#!/bin/bash
+#PBS -N probe_node
+#PBS -q debug
+#PBS -l select=1:ncpus=4:mem=16gb
+#PBS -l walltime=00:05:00
+#PBS -j oe
+#PBS -o "/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/pbs_logs/probe_node.pbs.out"
+
+set -euo pipefail
+mkdir -p "/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/pbs_logs"
+exec > "/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/pbs_logs/probe_node.log" 2>&1
+cd "/home/pradyot/Hackathon /Atomiq_QFF2026_IEM"
+
+echo "Hostname: $(hostname)"
+echo "Date: $(date)"
+echo "CPUs: $(nproc)"
+echo "Python 3.12: $(/home/pradyot/software/apps/python-3.12.11/bin/python3 --version)"
+
+/home/pradyot/software/apps/python-3.12.11/bin/python3 -c "
+import urllib.request
+try:
+    r = urllib.request.urlopen('https://pypi.org/simple/qiskit/', timeout=10)
+    print('PyPI reachable! Status:', r.status)
+except Exception as e:
+    print('PyPI error:', e)
+"

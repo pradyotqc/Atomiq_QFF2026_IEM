@@ -1,0 +1,79 @@
+#!/bin/bash
+#PBS -N setup_venv
+#PBS -q debug
+#PBS -l select=1:ncpus=8:mem=24gb
+#PBS -l walltime=00:15:00
+#PBS -j oe
+#PBS -o "/home/pradyot/Hackathon /Atomiq_QFF2026_IEM/pbs_logs/setup_venv.pbs.out"
+
+set -euo pipefail
+REPO_DIR="/home/pradyot/Hackathon /Atomiq_QFF2026_IEM"
+mkdir -p "${REPO_DIR}/pbs_logs"
+exec > "${REPO_DIR}/pbs_logs/setup_venv.log" 2>&1
+cd "${REPO_DIR}"
+
+export SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt
+export REQUESTS_CA_BUNDLE=/etc/pki/tls/certs/ca-bundle.crt
+export PIP_CERT=/etc/pki/tls/certs/ca-bundle.crt
+
+echo "=== Host: $(hostname) | CPUs: $(nproc) | Date: $(date) ==="
+
+if [ ! -d "${REPO_DIR}/.venv" ]; then
+    /home/pradyot/software/apps/python-3.12.11/bin/python3 -m venv "${REPO_DIR}/.venv"
+fi
+
+source "${REPO_DIR}/.venv/bin/activate"
+python -m pip install --upgrade pip setuptools wheel
+
+echo "=== Testing resolution with qiskit + ecosystem ==="
+if python -m pip install \
+    "qiskit>=1.2" \
+    qiskit-aer \
+    qiskit-algorithms \
+    qiskit-optimization \
+    qiskit-machine-learning \
+    scikit-learn \
+    pandas \
+    numpy \
+    scipy \
+    openpyxl \
+    matplotlib \
+    seaborn \
+    nbconvert \
+    nbformat \
+    ipykernel \
+    jupyter; then
+    echo "Full stack installed cleanly!"
+else
+    echo "Full stack resolution hit conflict; installing core Qiskit + ML stack..."
+    python -m pip install \
+        "qiskit>=2.0" \
+        qiskit-aer \
+        qiskit-algorithms \
+        scikit-learn \
+        pandas \
+        numpy \
+        scipy \
+        openpyxl \
+        matplotlib \
+        seaborn \
+        nbconvert \
+        nbformat \
+        ipykernel \
+        jupyter
+fi
+
+echo "=== Installed versions ==="
+python -m pip list
+python -c "
+import qiskit, qiskit_aer, qiskit_algorithms, sklearn, pandas, numpy, scipy, openpyxl, matplotlib
+print('qiskit:', qiskit.__version__)
+print('qiskit_aer:', qiskit_aer.__version__)
+print('qiskit_algorithms:', qiskit_algorithms.__version__)
+print('sklearn:', sklearn.__version__)
+print('pandas:', pandas.__version__)
+print('numpy:', numpy.__version__)
+print('scipy:', scipy.__version__)
+"
+echo "=== DONE ==="
+
